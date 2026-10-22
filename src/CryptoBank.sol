@@ -34,7 +34,10 @@ contract CryptoBank {
     }
 
     // constructor
-
+    /**
+     * @dev constructor
+     * @param addressAdmin_ address Admin
+     */
     constructor(address addressAdmin_) {
         maxBalanceUserEth = 6e18;
         maxBalanceUserUsdc = 15000e6;
@@ -47,6 +50,10 @@ contract CryptoBank {
 
     // functions
 
+
+  /**
+   * @dev deposit ETH
+   */
     receive() external payable {
         require(msg.value <= depositLimitEth, "exceded limit");
         require((balanceUserEth[msg.sender] + msg.value) <= maxBalanceUserEth, "Exceded maxBalanceEth");
@@ -55,6 +62,11 @@ contract CryptoBank {
         emit EventDepositEth(msg.sender, msg.value);
     }
 
+    /**
+     * @dev withraw ETH
+     * @param to_ address to
+     * @param amount_ amount to withraw 
+     */
     function withrawETH(address to_, uint256 amount_) public {
         require(amount_ <= balanceUserEth[msg.sender], "Incorrect amount");
 
@@ -65,6 +77,10 @@ contract CryptoBank {
         emit EventWithrawETH(msg.sender, amount);
     }
 
+    /**
+     * @dev deposit usdc
+     * @param amount_ amount to deposit
+     */
     function depositUsdc(uint256 amount_) public {
         require(amount_ <= depositLimitUsdc, "Exceded amount per transaction");
         require((amount_ + balanceUserUsdc[msg.sender]) <= maxBalanceUserUsdc, "Exceded Balance");
@@ -76,6 +92,10 @@ contract CryptoBank {
         emit EventDespositUsdc(msg.sender, amount_);
     }
 
+    /**
+     * @dev withraw usdc
+     * @param amount_ amount to withraw
+     */
     function withrawUsdc(uint256 amount_) public {
         require(amount_ <= balanceUserUsdc[msg.sender], "Incorrect Amount");
 
@@ -87,18 +107,34 @@ contract CryptoBank {
         emit EventWithrawUsdc(msg.sender, amount_);
     }
 
+    /**
+     * @dev set max balance ETH to deposit
+     * @param newBalance new balance
+     */
     function setMaxBalanceEth(uint256 newBalance) public onlyAdmin {
         maxBalanceUserEth = newBalance;
     }
 
+    /**
+     * @dev set max balance USDC to deposit
+     * @param newBalance_ new balance
+     */
     function setMaxBalanceUsdc(uint256 newBalance_) public onlyAdmin {
         maxBalanceUserUsdc = newBalance_;
     }
 
+    /**
+     * @dev set Max deposit ETH per transaction
+     * @param newMaxDepositEth_ new max deposit ETH per transaction
+     */
     function setMaxDepositEth(uint256 newMaxDepositEth_) public onlyAdmin {
         depositLimitEth = newMaxDepositEth_;
     }
 
+    /**
+     * @dev set max deposit USDC per transaction
+     * @param newMaxDepositUsdc_ new max deposit USDC per transaction
+     */
     function setMaxDepostiUsdc(uint256 newMaxDepositUsdc_) public onlyAdmin {
         depositLimitUsdc = newMaxDepositUsdc_;
     }
